@@ -1,0 +1,74 @@
+# Environment variables
+.env
+*.env
+!.env.template
+
+# Cloud credentials
+.azure/
+.aws/
+.gcp/
+credentials/
+
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+.terraform.lock.hcl
+
+# Docker
+**/.dockerignore
+
+# Node modules
+**/node_modules/
+package-lock.json
+yarn.lock
+
+# Python
+**/__pycache__/
+*.pyc
+**/venv/
+**/env/
+*.egg-info/
+.pytest_cache/
+*.py[cod]
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+
+# Build outputs
+**/dist/
+**/build/
+*.exe
+*.dll
+*.so
+
+# Kubernetes secrets
+**/secrets/
+*.key
+*.crt
+*.pem
+
+# Database
+*.db
+*.sqlite
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
+

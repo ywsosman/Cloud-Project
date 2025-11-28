@@ -1,0 +1,103 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: zero-trust-postgres
+    environment:
+      POSTGRES_DB: zerotrust
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      POSTGRES_INITDB_ARGS: "-A md5"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - zero-trust-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Authentication Service
+  auth-service:
+    build:
+      context: ./src/auth-service
+      dockerfile: Dockerfile
+      target: development
+    container_name: zero-trust-auth
+    ports:
+      - "8081:8081"
+    environment:
+      NODE_ENV: development
+      PORT: 8081
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: zerotrust
+      DB_USER: postgres
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-key-change-in-production}
+      JWT_EXPIRY: ${JWT_EXPIRY:-1h}
+      JWT_REFRESH_EXPIRY: ${JWT_REFRESH_EXPIRY:-7d}
+      LOG_LEVEL: debug
+    volumes:
+      - ./src/auth-service:/app
+      - /app/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - zero-trust-net
+    command: npm run dev
+
+  # API Gateway (Nginx)
+  api-gateway:
+    image: nginx:alpine
+    container_name: zero-trust-gateway
+    ports:
+      - "8080:80"
+      - "8443:443"
+    volumes:
+      - ./src/api-gateway/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./src/api-gateway/conf.d:/etc/nginx/conf.d:ro
+    depends_on:
+      - auth-service
+    networks:
+      - zero-trust-net
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # Redis (for session management - optional for now)
+  redis:
+    image: redis:7-alpine
+    container_name: zero-trust-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - zero-trust-net
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+networks:
+  zero-trust-net:
+    driver: bridge
+    name: zero-trust-network
+
+volumes:
+  postgres_data:
+    name: zero-trust-postgres-data
+  redis_data:
+    name: zero-trust-redis-data
+

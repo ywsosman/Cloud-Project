@@ -1,0 +1,15 @@
+# Azure Security Log Collector Dependencies
+azure-identity==1.15.0
+azure-mgmt-monitor==6.0.2
+azure-mgmt-resource==23.0.1
+azure-storage-blob==12.19.0
+azure-mgmt-security==6.0.0
+
+# Data Processing
+pandas==2.1.4
+numpy==1.26.2
+
+# Utilities
+python-dotenv==1.0.0
+requests==2.31.0
+
