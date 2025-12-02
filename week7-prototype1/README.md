@@ -5,6 +5,7 @@
 - Create simple API Gateway
 - Deploy basic version on cloud
 - Demonstrate zero-trust principle: "Verify Explicitly"
+- Expose Azure Security Dataset through a protected API
 
 ## Deliverables
 - Working authentication service
@@ -53,12 +54,23 @@ Client → API Gateway → Auth Service → Azure AD/Database
 - SSL/TLS termination
 - Request logging
 
-### 3. User Service
+### 3. Security Dataset API (Auth Service)
 
-**Features**:
-- User profile CRUD operations
-- Role management (Admin, User, Guest)
-- Permission management
+To connect the Week 5 Azure Security Dataset with the running prototype, the `auth-service` now exposes a **read‑only security API**:
+
+- `GET /api/security/activity-logs`
+  - **Auth**: JWT required (any authenticated user)
+  - **Source**: Reads from `data-collection/azure_activity_logs.json`
+  - **Query params**:
+    - `limit` (optional, default `50`) – max number of events to return
+    - `status` (optional) – filter by status (e.g., `Succeeded`, `Started`)
+    - `caller` (optional) – filter by partial match on caller email/UPN
+  - **Response**:
+    - `count` – number of events returned
+    - `totalAvailable` – total events after filters
+    - `data` – list of activity log entries (timestamp, level, operation, resource_id, status, caller, category, claims)
+
+This satisfies the “use Azure Security Dataset” part of the prototype and enables a future security dashboard frontend.
 
 ## Directory Structure
 

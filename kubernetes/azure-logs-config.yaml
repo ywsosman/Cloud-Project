@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: azure-activity-logs
+  namespace: zero-trust
+data:
+  # The actual content is populated from the local file via `kubectl create configmap`.
+  # This file simply documents the resource and namespace.
+  placeholder: "See deployment guide for how to populate this ConfigMap from azure_activity_logs.json"
+
+

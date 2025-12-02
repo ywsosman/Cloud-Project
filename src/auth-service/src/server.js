@@ -7,6 +7,7 @@ const { sequelize } = require('./config/database');
 const logger = require('./utils/logger');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
+const securityRoutes = require('./routes/securityRoutes');
 const { errorHandler } = require('./middleware/errorMiddleware');
 
 const app = express();
@@ -61,6 +62,7 @@ app.get('/health', (req, res) => {
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/security', securityRoutes);
 
 // 404 handler
 app.use((req, res) => {
@@ -77,11 +79,9 @@ const startServer = async () => {
     await sequelize.authenticate();
     logger.info('Database connection established successfully');
 
-    // Sync database models (in production, use migrations)
-    if (process.env.NODE_ENV === 'development') {
-      await sequelize.sync({ alter: true });
-      logger.info('Database models synchronized');
-    }
+    // Sync database models (for this lab, always ensure tables exist)
+    await sequelize.sync({ alter: true });
+    logger.info('Database models synchronized');
 
     // Start server
     app.listen(PORT, () => {
