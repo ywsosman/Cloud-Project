@@ -44,14 +44,14 @@
 - ✅ Week 7: Prototype Phase I (Full Implementation)
 
 ### ⏳ Upcoming (Weeks 8-15)
-- 📅 Week 8: Cloud Services Integration
-- 📅 Week 9: Midterm Review & Demo
-- 📅 Week 10: Advanced Zero-Trust Features
-- 📅 Week 11: Testing & Monitoring
-- 📅 Week 12: Optimization
-- 📅 Week 13: Final Integration
-- 📅 Week 14: Documentation & Report
-- 📅 Week 15: Final Demo
+- ✅ Week 8: Cloud Services Integration
+- ✅ Week 9: Midterm Review & Demo
+- ✅ Week 10: Advanced Zero-Trust Features
+- ✅ Week 11: Testing & Monitoring
+- ✅ Week 12: Optimization
+- ✅ Week 13: Final Integration
+- ✅ Week 14: Documentation & Report
+- ✅ Week 15: Final Demo
 
 **Progress:** 47% Complete (7/15 weeks)
 
@@ -261,68 +261,6 @@ bash scripts/test-api.sh
 | **Security Features** | 12+ |
 | **Technologies** | 15+ |
 
-## 📘 Project Report Template (for Submission)
-
-Use this outline for your written report:
-
-1. **Cover Page**
-   - Project title: *Zero‑Trust Cloud Lab: Secure Authentication and Azure Security Analytics*
-   - Course name, student name & ID, instructor, submission date.
-
-2. **Abstract**
-   - Short summary of goals, methods (auth‑service + AKS + Azure dataset), and main result.
-
-3. **Introduction**
-   - Overview of the project and zero‑trust concept.
-   - Purpose and objectives.
-   - Problem statement: need for explicit verification and security monitoring in cloud systems.
-
-4. **Background & Literature Review**
-   - Zero‑Trust Architecture (NIST, industry guides).
-   - Azure security tooling (Activity Logs, Monitor, Defender).
-   - JWT/MFA/OWASP best practices.
-
-5. **System Requirements / Tools Used**
-   - Cloud: Azure (AKS, ACR, Storage).
-   - Runtime: Docker, Kubernetes, Node.js, React, PostgreSQL.
-   - Languages: JavaScript/Node.js, React, Python (data collection), PowerShell.
-
-6. **Methodology / Approach**
-   - Design architecture (client → API Gateway → Auth Service → Postgres).
-   - Implement auth-service (register, login, JWT, audit logs, sessions).
-   - Collect Azure Activity Logs with `azure_log_collector.py`.
-   - Build Docker images and deploy to AKS + ACR.
-   - Build React frontend and connect it to `/api/security/activity-logs`.
-
-7. **System Design**
-   - Use case diagram: user registers, logs in, views dashboard.
-   - ERD: `users`, `sessions`, `audit_logs` tables.
-   - Flowcharts / sequence diagrams for login flow and security‑logs flow.
-
-8. **Implementation**
-   - Screenshots: login, register, dashboard, `kubectl get pods`, Postgres `\\dt`.
-   - Key code snippets: JWT utilities, auth controller, Nginx config, security controller, React dashboard.
-
-9. **Results & Testing**
-   - Functional tests (register/login, protected endpoints, rate limiting).
-   - Security tests (password policy, account lockout).
-   - Showing real Azure Activity Logs on the dashboard.
-   - Problems encountered (Azure subscription limits, AKS/DB issues) and how they were solved.
-
-10. **Discussion**
-    - What worked well (containers, AKS, dataset integration).
-    - Challenges (Azure provider restrictions, debugging CrashLoopBackOff).
-    - Potential improvements (Key Vault, RBAC on dashboard, advanced analytics).
-
-11. **Conclusion**
-    - Overall summary of what the system does.
-    - What you learned about zero‑trust, cloud, and Kubernetes.
-
-12. **References**
-    - Microsoft Azure docs, NIST Zero Trust docs, OWASP, library docs, and any tutorials used.
-
-13. **Appendix**
-    - Link to repository / full source code.
 
 ## 🎯 Success Criteria
 
