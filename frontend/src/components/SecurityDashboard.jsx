@@ -23,10 +23,15 @@ export default function SecurityDashboard() {
       const res = await api.get('/api/security/activity-logs', { params });
       setLogs(res.data.data || []);
     } catch (err) {
-      const msg =
-        err.response?.data?.error ||
-        'Failed to load activity logs. Check that the backend is running.';
-      setError(msg);
+      if (err.response?.status === 401) {
+        setError('Your session has expired. Please login again.');
+        // Token will be cleared by axios interceptor
+      } else {
+        const msg =
+          err.response?.data?.error ||
+          'Failed to load activity logs. Check that the backend is running.';
+        setError(msg);
+      }
     } finally {
       setLoading(false);
     }

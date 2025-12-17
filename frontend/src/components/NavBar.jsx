@@ -18,12 +18,20 @@ export default function NavBar() {
       </div>
       <nav className="navbar-links">
         {token && (
-          <Link
-            to="/dashboard"
-            className={location.pathname === '/dashboard' ? 'active' : ''}
-          >
-            Security Dashboard
-          </Link>
+          <>
+            <Link
+              to="/dashboard"
+              className={location.pathname === '/dashboard' ? 'active' : ''}
+            >
+              Security Dashboard
+            </Link>
+            <Link
+              to="/settings/mfa"
+              className={location.pathname === '/settings/mfa' ? 'active' : ''}
+            >
+              MFA Settings
+            </Link>
+          </>
         )}
         {!token && (
           <>

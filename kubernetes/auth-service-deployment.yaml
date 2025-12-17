@@ -35,7 +35,7 @@ spec:
         fsGroup: 1001
       containers:
       - name: auth-service
-        image: zerotrustacrregistry.azurecr.io/auth-service:v2
+        image: zerotrustacrregistry.azurecr.io/auth-service:v3
         imagePullPolicy: Always
         ports:
         - name: http

@@ -8,6 +8,7 @@ const logger = require('./utils/logger');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const securityRoutes = require('./routes/securityRoutes');
+const jitAccessRoutes = require('./routes/jitAccessRoutes');
 const { errorHandler } = require('./middleware/errorMiddleware');
 
 const app = express();
@@ -63,6 +64,7 @@ app.get('/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/security', securityRoutes);
+app.use('/api/jit', jitAccessRoutes);
 
 // 404 handler
 app.use((req, res) => {

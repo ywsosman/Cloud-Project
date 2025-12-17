@@ -4,6 +4,7 @@ import NavBar from './components/NavBar.jsx';
 import LoginPage from './components/LoginPage.jsx';
 import RegisterPage from './components/RegisterPage.jsx';
 import SecurityDashboard from './components/SecurityDashboard.jsx';
+import MFASettings from './components/MFASettings.jsx';
 
 function isAuthenticated() {
   const token = localStorage.getItem('accessToken');
@@ -28,6 +29,14 @@ export default function App() {
             element={
               <PrivateRoute>
                 <SecurityDashboard />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/settings/mfa"
+            element={
+              <PrivateRoute>
+                <MFASettings />
               </PrivateRoute>
             }
           />

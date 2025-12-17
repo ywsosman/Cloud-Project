@@ -25,7 +25,8 @@ const AuditLog = sequelize.define('AuditLog', {
         'login', 'logout', 'register', 'password_change',
         'mfa_enable', 'mfa_disable', 'token_refresh',
         'account_lock', 'account_unlock', 'permission_change',
-        'data_access', 'api_call', 'failed_login'
+        'data_access', 'api_call', 'failed_login',
+        'jit_access_request', 'risk_assessment'
       ]]
     }
   },

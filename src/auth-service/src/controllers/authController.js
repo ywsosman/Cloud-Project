@@ -164,13 +164,18 @@ const login = async (req, res, next) => {
       expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days
     });
 
-    // Log successful login
+    // Calculate risk score
+    const { calculateRiskScore } = require('../utils/riskScoring');
+    const riskScore = await calculateRiskScore(user, req, 'login');
+
+    // Log successful login with risk score
     await AuditLog.logEvent({
       userId: user.id,
       action: 'login',
       status: 'success',
       ipAddress: req.ip,
-      userAgent: req.get('user-agent')
+      userAgent: req.get('user-agent'),
+      riskScore
     });
 
     logger.info(`User logged in: ${user.username}`);
