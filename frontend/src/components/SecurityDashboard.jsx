@@ -38,7 +38,14 @@ export default function SecurityDashboard() {
   };
 
   useEffect(() => {
-    loadLogs();
+    // Only load logs if user is authenticated
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      loadLogs();
+    } else {
+      setError('Please log in to view activity logs.');
+      setLoading(false);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

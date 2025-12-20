@@ -82,6 +82,12 @@ spec:
           value: "7d"
         - name: LOG_LEVEL
           value: "info"
+        - name: AZURE_ACTIVITY_LOG_FILE
+          value: "/data/azure_activity_logs.json"
+        volumeMounts:
+        - name: azure-activity-logs
+          mountPath: /data
+          readOnly: true
         resources:
           requests:
             cpu: 250m
@@ -113,6 +119,10 @@ spec:
           capabilities:
             drop:
             - ALL
+      volumes:
+      - name: azure-activity-logs
+        configMap:
+          name: azure-activity-logs
 ---
 apiVersion: v1
 kind: Service

@@ -42,12 +42,44 @@ data:
                 add_header Content-Type text/plain;
             }
             
-            location /api/ {
-                proxy_pass http://auth_service;
-                proxy_set_header Host $host;
-                proxy_set_header X-Real-IP $remote_addr;
-                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        # Handle CORS preflight requests
+        location /api/ {
+            # Handle OPTIONS requests for CORS
+            if ($request_method = 'OPTIONS') {
+                add_header 'Access-Control-Allow-Origin' '*' always;
+                add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE, OPTIONS' always;
+                add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type' always;
+                add_header 'Access-Control-Max-Age' 1728000 always;
+                add_header 'Content-Type' 'text/plain; charset=utf-8' always;
+                add_header 'Content-Length' 0 always;
+                return 204;
             }
+            
+            # Forward full path including /api/ prefix to auth-service
+            proxy_pass http://auth_service;
+            proxy_http_version 1.1;
+            proxy_set_header Connection "";
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_set_header Authorization $http_authorization;
+            
+            # CORS headers for actual requests
+            add_header 'Access-Control-Allow-Origin' '*' always;
+            add_header 'Access-Control-Allow-Credentials' 'true' always;
+            
+            # Timeouts
+            proxy_connect_timeout 5s;
+            proxy_send_timeout 30s;
+            proxy_read_timeout 30s;
+        }
+        
+        # Default location - return 404 for unmatched paths
+        location / {
+            return 404 '{"error":"Not Found"}\n';
+            add_header Content-Type application/json;
+        }
         }
     }
 ---
