@@ -17,8 +17,10 @@ const PORT = process.env.PORT || 8081;
 // Security middleware
 app.use(helmet());
 app.use(cors({
-  origin: process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : '*',
-  credentials: true
+  origin: process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : true,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 // Rate limiting
@@ -30,6 +32,26 @@ const limiter = rateLimit({
   legacyHeaders: false,
 });
 
+// Health check endpoints (BEFORE rate limiting!)
+app.get('/health', (req, res) => {
+  res.status(200).json({ 
+    status: 'healthy', 
+    timestamp: new Date().toISOString(),
+    service: 'auth-service'
+  });
+});
+
+// Kubernetes health check endpoint
+app.get('/healthz', (req, res) => {
+  res.status(200).json({ 
+    status: 'healthy', 
+    timestamp: new Date().toISOString(),
+    service: 'auth-service',
+    uptime: process.uptime()
+  });
+});
+
+// Apply rate limiting AFTER health checks
 app.use('/api/auth/login', rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 5, // Stricter limit for login attempts
@@ -51,13 +73,44 @@ app.use((req, res, next) => {
   next();
 });
 
-// Health check
-app.get('/health', (req, res) => {
-  res.status(200).json({ 
-    status: 'healthy', 
-    timestamp: new Date().toISOString(),
-    service: 'auth-service'
-  });
+// ML Prediction endpoint for anomaly detection
+app.get('/predict', async (req, res) => {
+  try {
+    // Example: Risk prediction based on authentication patterns
+    // In production, this would call an actual ML model
+    const { userId, ipAddress, userAgent } = req.query;
+    
+    // Simulate risk scoring algorithm
+    const riskScore = Math.random() * 100;
+    const prediction = {
+      userId: userId || 'anonymous',
+      risk_score: parseFloat(riskScore.toFixed(2)),
+      risk_level: riskScore > 70 ? 'high' : riskScore > 40 ? 'medium' : 'low',
+      confidence: parseFloat((Math.random() * 0.3 + 0.7).toFixed(2)), // 0.70-1.00
+      factors: {
+        suspicious_ip: riskScore > 50,
+        unusual_time: riskScore > 60,
+        new_device: riskScore > 70
+      },
+      recommendation: riskScore > 70 ? 'require_mfa' : 'allow',
+      timestamp: new Date().toISOString(),
+      model_version: 'v1.0'
+    };
+    
+    logger.info('Prediction request processed', { 
+      userId, 
+      riskScore: prediction.risk_score,
+      riskLevel: prediction.risk_level 
+    });
+    
+    res.status(200).json(prediction);
+  } catch (error) {
+    logger.error('Prediction failed:', error);
+    res.status(500).json({ 
+      error: 'Prediction service unavailable',
+      timestamp: new Date().toISOString()
+    });
+  }
 });
 
 // Routes

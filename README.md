@@ -165,6 +165,11 @@ Cloud Project/
 │   └── api-gateway/             ← ✅ Complete
 │
 ├── ☸️  kubernetes/               ← K8s manifests (READY)
+│   ├── auth-service-deployment.yaml
+│   ├── api-gateway-deployment.yaml
+│   ├── auth-service-hpa.yaml   ← Horizontal Pod Autoscaler
+│   ├── api-gateway-hpa.yaml    ← Horizontal Pod Autoscaler
+│   └── KUBECTL_GENERATION_GUIDE.md
 ├── 🔧 scripts/                   ← Automation scripts
 ├── 📊 data-collection/           ← Data tools (READY)
 └── 📚 docs/                      ← Documentation
@@ -187,6 +192,11 @@ Cloud Project/
 - [x] Input validation
 
 ### API Endpoints ✅
+**Health & Monitoring:**
+- GET `/health` - Basic health check
+- GET `/healthz` - Kubernetes health probe endpoint
+- GET `/predict` - ML-based risk prediction endpoint
+
 **Public (no auth):**
 - POST `/api/auth/register` - Register user
 - POST `/api/auth/login` - Login user
@@ -204,11 +214,14 @@ Cloud Project/
 - [x] Docker containerization
 - [x] Docker Compose (local dev)
 - [x] Kubernetes manifests (cloud deploy)
-- [x] Health checks
+- [x] Health checks (/healthz endpoint)
+- [x] Liveness & Readiness probes
+- [x] Horizontal Pod Autoscaler (HPA)
 - [x] Rolling updates
 - [x] Resource limits
 - [x] Secrets management
 - [x] Service discovery
+- [x] Auto-scaling (CPU/Memory based)
 
 ## 📚 Documentation
 

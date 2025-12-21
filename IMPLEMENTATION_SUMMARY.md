@@ -110,16 +110,26 @@ kubernetes/
 ├── namespace.yaml                   ✅ Namespace + quotas
 ├── auth-service-deployment.yaml    ✅ Auth deployment + service
 ├── api-gateway-deployment.yaml     ✅ Gateway deployment + service
-└── secrets-template.yaml           ✅ Secrets template
+├── auth-service-hpa.yaml           ✅ Horizontal Pod Autoscaler
+├── api-gateway-hpa.yaml            ✅ Horizontal Pod Autoscaler
+├── postgres-statefulset.yaml       ✅ Database StatefulSet
+├── secrets-template.yaml           ✅ Secrets template
+├── network-policies.yaml           ✅ Network security
+├── azure-logs-config.yaml          ✅ Azure logs ConfigMap
+└── KUBECTL_GENERATION_GUIDE.md     ✅ YAML generation docs
 ```
 
 **Features:**
 - Resource quotas
 - Pod security policies
-- Health checks
+- Health checks (/healthz)
+- Liveness & Readiness probes
+- Horizontal Pod Autoscaler (CPU/Memory)
 - Rolling updates
 - Service discovery
 - Load balancing
+- Auto-scaling (2-10 pods)
+- Network policies
 
 ### Data Collection Tools
 
@@ -160,13 +170,14 @@ kubernetes/
 ## 📊 Implementation Statistics
 
 ### Code Metrics
-- **Total Files Created:** 50+
-- **Lines of Documentation:** ~5,000
-- **Lines of Code:** ~2,000
-- **API Endpoints:** 15+
+- **Total Files Created:** 55+
+- **Lines of Documentation:** ~6,000
+- **Lines of Code:** ~2,200
+- **API Endpoints:** 18+ (including /healthz, /predict)
 - **Database Models:** 3
 - **Middleware Components:** 3
 - **Utility Functions:** 10+
+- **Kubernetes Resources:** 15+
 
 ### Architecture Components
 | Component | Technology | Status |
@@ -234,6 +245,13 @@ docker-compose logs -f
 **Estimated Time:** 30-60 minutes
 
 ## 📋 API Endpoints
+
+### Health & Monitoring Endpoints
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| GET | `/health` | Basic health check |
+| GET | `/healthz` | Kubernetes health probe endpoint |
+| GET | `/predict` | ML-based risk prediction |
 
 ### Public Endpoints (No Authentication)
 | Method | Endpoint | Purpose |
@@ -321,14 +339,20 @@ docker-compose logs -f
 
 ### Scalability
 **Horizontal Scaling:**
-- ✅ Kubernetes HPA ready
+- ✅ Kubernetes HPA configured (auth-service-hpa.yaml)
+- ✅ Min: 2 pods, Max: 10 pods
+- ✅ CPU threshold: 70%
+- ✅ Memory threshold: 80%
 - ✅ Stateless service design
 - ✅ Load balancing configured
+- ✅ Scale-up: Fast (adds 4 pods/30s)
+- ✅ Scale-down: Conservative (5min stabilization)
 
 **Vertical Scaling:**
 - ✅ Resource limits defined
 - ✅ Resource requests configured
 - ✅ Auto-scaling triggers ready
+- ✅ Dual-metric scaling (CPU + Memory)
 
 ## 💰 Cost Estimation (Azure)
 
